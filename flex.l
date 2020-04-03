@@ -11,8 +11,15 @@ int cursor = 1;
 <DEFAULT,THREAD>\<li\ class=\"comment\"\    { BEGIN THREAD; printf(",{"); rsc[cursor-1]++; }
 <REPLY>\<li\ class=\"comment\"\             { BEGIN THREAD; rsc[cursor-1]++; }
 <*>\<li\ class=\"comment\"\                 { BEGIN THREAD; printf("{"); rsc[cursor-1]++; }
-<THREAD>\<\/ol\>                            { printf(", \"hasReplies\": %s, \"numberOfReplies\": %d}]", rsc[cursor] ? "true" : "false", rsc[cursor]); rsc[cursor--] = 0; }
-<THREAD>\<\/form\>\r\n\<\/li\>\r\n          { printf(", \"hasReplies\": %s, \"numberOfReplies\": %d}", rsc[cursor] ? "true" : "false", rsc[cursor]); rsc[cursor]=0; BEGIN DEFAULT;}
+<THREAD>\<\/ol\>                            { char *bool = rsc[cursor] ? "true" : "false";                                                          \
+                                              char *reply = rsc[cursor] ? " " : "\"replies\": [], ";                                                \
+                                              printf(",%s\"hasReplies\": %s, \"numberOfReplies\": %d, \"likes\": 0}]", reply, bool, rsc[cursor]);   \
+                                              rsc[cursor--] = 0; }
+<THREAD>\<\/form\>\r\n\<\/li\>\r\n          { char *bool = rsc[cursor] ? "true" : "false";                                                          \
+                                              char *reply = rsc[cursor] ? " " : "\"replies\": [], ";                                                \
+                                              printf(",%s\"hasReplies\": %s, \"numberOfReplies\": %d, \"likes\": 0}", reply, bool, rsc[cursor]);    \
+                                              rsc[cursor]=0;                                                                                        \
+                                              BEGIN DEFAULT; }
 
 <THREAD>data-comment-id=                    BEGIN ID;
 <ID>[^\>]+                                  printf("\"id\": %s,", yytext);
@@ -36,7 +43,9 @@ int cursor = 1;
 <DATE>\>\r\n                                BEGIN THREAD;
 
 <THREAD>\<ol\ class[^\>]*\>\r\n             { BEGIN REPLY; printf(",\"replies\": [{"); cursor++; }
-<*>\<\/li\>\r\n/\<li                        printf(", \"hasReplies\": %s, \"numberOfReplies\": %d}", rsc[cursor] ? "true" : "false", rsc[cursor]);
+<*>\<\/li\>\r\n/\<li                        { char *bool = rsc[cursor] ? "true" : "false";                                                          \
+                                              char *reply = rsc[cursor] ? " " : "\"replies\": [], ";                                                \
+                                              printf(",%s\"hasReplies\": %s, \"numberOfReplies\": %d, \"likes\": 0}", reply, bool, rsc[cursor]); }
 
 <*>.|\n                                     {;}
 
