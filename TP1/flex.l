@@ -53,5 +53,17 @@ int cursor = 1;
 int yywrap()
 { return(1); }
 
-int main()
-{ printf("{\"commentThread\": ["); yylex(); printf("]}\n"); return 0; }
+int main(int argc, char* argv[])
+{ 
+    if(argc == 2) {
+        char com[200] ;
+        sprintf(com,"iconv -f cp1252 -t utf8 \"%s\"",argv[1]);
+        yyin = popen(com, "r");
+        printf("{\"commentThread\": ["); 
+        yylex(); 
+        printf("]}\n"); 
+    }
+    else
+        printf("Usage: html2json.out input_file\n");
+    return 0; 
+}
