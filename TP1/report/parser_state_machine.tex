@@ -1,0 +1,27 @@
+%Requires:
+%\usepackage{tikz}
+%\usetikzlibrary{positioning,automata,decorations.markings}
+\begin{tikzpicture}[font=\ttfamily,auto]
+    \node[state,initial,accepting,text width=15mm,align=center] (thread) {THREAD};
+    \node[state,text width=15mm,align=center] (id) [below=4.5cm of thread] {ID};
+    \node[state,text width=15mm,align=center] (content) [above=4.5cm of thread] {CONTENT};
+    \node[state,text width=15mm,align=center] (date) [right=5cm of thread] {DATE};
+    \node[state,text width=15mm,align=center] (reply)  [left=5cm of thread] {REPLY};
+    \path[thick,->]
+    (thread)     edge [bend left=52] node [align=center] {\char`<p\char`>[ \char`\\r\char`\\n]*} (content)
+                 edge [loop below] node {\char`<li class="comment\char`"} ()
+                 edge [bend left=52] node {data-comment-id=} (id)
+                 edge [bend left=12] node {datetime=\char`"} (date)
+                 edge [bend left=12] node {\char`<ol class[\char`^\char`>]*\char`>\char`\\r\char`\\n} (reply)
+
+    (content)    edge [bend left=52] node {\char`\\r\char`\\n *char`<char`/p\char`>\char`\\r\char`\\n} (thread)
+
+    (id)         edge [bend left=52] node {\char`>} (thread)
+
+    (date)       edge [bend left=12] node {\char`>\char`\\r\char`\\n} (thread)
+
+    (reply)      edge [bend left=12] node {\char`<li class="comment\char`"} (thread)
+
+    ;
+\end{tikzpicture}
+

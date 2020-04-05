@@ -1,0 +1,10 @@
+# Flex
+*.yy.c
+*.out
+
+# LaTeX
+*.aux
+*.log
+*.toc
+
+html2json
