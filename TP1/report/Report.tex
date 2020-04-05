@@ -44,9 +44,9 @@ Solino (A86435)}
 
 \begin{abstract}
     \begin{center}
-        O objetivo deste projeto e processar um ficheiro HTML para produzir um
+        O objetivo deste projeto é processar um ficheiro HTML para produzir um
         JSON organizado, utilizando \textit{FLex} para gerar um parser eficiente
-        utilizando expressoes regulares.
+        utilizando expressões regulares.
     \end{center}
 \end{abstract}
 
@@ -57,17 +57,17 @@ Solino (A86435)}
 \chapter{Introdução}
 Este projeto tem como objetivo o processamento de um ficheiro \textit{HTML},
 contendo os comentários de uma notícia, de forma extrair todos os dados
-relevantes e transforma-los num formato \textit{JSON}.
+relevantes e transformá-los num formato \textit{JSON}.
 
 Para o processamento deste ficheiro, foi escrito um filtro de texto utilizando 
 o gerador \textit{FLex}, e a linguagem de programação C.
 
-Em primeiro lugar, iremos analizar o problema, determinar que funcionalidades 
+Em primeiro lugar, iremos analisar o problema, determinar que funcionalidades 
 implementar e identificar os desafios que serão necessários ultrapassar
 para implementar essas funcionalidades.
 
-Em seguida, iremos analizar a nossa solução, a estrutura do \textit{parser},
-como foram escolhidos os subcontextos e que expressoes regulares foram
+Em seguida, iremos analisar a nossa solução, a estrutura do \textit{parser},
+como foram escolhidos os subcontextos e que expressões regulares foram
 escolhidas para os construir, e a estrutura do projeto onde iremos falar
 das estruturas de dados utilizadas.
 
@@ -77,7 +77,7 @@ Para concluir, iremos apresentar um pequeno manual de utilização do programa.
 
 O programa tem que cumprir os seguintes requisitos:
 \begin{itemize}
-    \item Converter o ficheiro de input para \textit{UTF8};
+    \item Converter o ficheiro de input para \textit{UTF-8};
     \item Identificar no ficheiro de \textit{input} os diversos comentários;
     \item Separar os diferentes elementos dos comentários;
     \item Garantir que as respostas a um comentário são guardadas de forma
@@ -85,12 +85,12 @@ O programa tem que cumprir os seguintes requisitos:
     \item Contar o número de respostas a cada comentário;
 \end{itemize}
 
-O ficheiro de \textit{input} apresentou varíos problemas que precisa de ser
+O ficheiro de \textit{input} apresentou vários problemas que precisa de ser
 tratados para conseguir cumprir os requisitos propostos.
 
 O primeiro sendo a codificação do ficheiro, estando codificado em \textit{latin1},
-e sendo preciso converte-lo para \textit{utf8}, de forma a que o output do 
-programa não apareça com caracteres ilegiveis.
+e sendo preciso convertê-lo para \textit{UTF-8}, de forma a que o output do 
+programa não apareça com caracteres ilegíveis.
 
 O segundo foi o facto de alguns dos comentários apresentados conterem mais do que
 uma linha, invalidando assim o \textit{JSON} de output se não forem tratados.
@@ -115,7 +115,7 @@ e onde estão contidos todos os subcontextos descritos abaixo.
 
 \subsection{CONTENT}
 
-Neste contexto é onde o conteudo de cada resposta é tratado e formatado,
+Neste contexto é onde o conteúdo de cada resposta é tratado e formatado,
 removendo linhas em branco, e escapando os caracteres \textit{'\textbackslash n'},
 de forma a assegurar que o output do programa é válido.
 
@@ -168,8 +168,8 @@ será mais uma vez retornado pelo \textit{stdout}.
 
 \chapter{Conclusão}
 
-Para conluir, fazemos um balanço bastante positivo do projeto, conseguindo
-atingir todos os requisitos definidos. A utilização de expressoes regulares
+Para concluir, fazemos um balanço bastante positivo do projeto, conseguindo
+atingir todos os requisitos definidos. A utilização de expressões regulares
 para tratamento de strings mostrou ser algo extremamente poderoso, permitindo
 simplificar tarefas, que de outra forma seriam muito mais trabalhosas e demoradas.
 
