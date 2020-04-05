@@ -27,7 +27,6 @@ int cursor = 1;
 <THREAD>\<p\>[\ \r\n]*                    { BEGIN CONTENT; printf("\"commentText\": \""); } 
 <CONTENT>[^\"\r\n]                        ECHO;
 <CONTENT>\"                               printf("\'");
-<CONTENT>\r\n/\r\n                        {;}
 <CONTENT>\r                               {;}
 <CONTENT>\r\n\ *\<\/p\>\r\n               { BEGIN THREAD; printf("\""); }
 <CONTENT>\n                               { printf("\\n"); }

@@ -100,8 +100,15 @@ uma linha, invalidando assim o \textit{JSON} de output se não forem tratados.
 \section{Contextos de Processamento}
 
 Para processar o ficheiro com os comentários foram implementados 7 subcontextos:
-\textit{DEFAULT}, \textit{THREAD}, \textit{CONTENT}, \textit{ID}, \textit{USER},
-\textit{DATE} e \textit{REPLY}.
+\textit{DEFAULT}, \textit{THREAD}, \textit{CONTENT} (identificado a amarelo),
+\textit{ID} (identificado a vermelho), \textit{USER} (identificado a azul),
+\textit{DATE} (identificado a verde) e \textit{REPLY} (identificado a roxo).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth]{states.png}
+    \caption{Comentário e respostas com os contextos identificados}
+\end{figure}
 
 \subsection{DEFAULT}
 
@@ -113,10 +120,19 @@ que contem a informação irrelevante ao programa.
 No THREAD é onde se encontra a informação relevante sobre os comentários,
 e onde estão contidos todos os subcontextos descritos abaixo.
 
+\begin{figure}[H]
+    \input{parser_state_machine.tex}
+    \caption{Maquina de Estados do Parser}\label{fig:parser_state_machine}
+\end{figure}
+
+Na Figura \ref{fig:parser_state_machine} é descrito como é feita a mudança de
+estados é efetuada, e que expressões regulares causam estas mudanças.
+\pagebreak
+
 \subsection{CONTENT}
 
 Neste contexto é onde o conteúdo de cada resposta é tratado e formatado,
-removendo linhas em branco e escapando os caracteres \textit{'\textbackslash n'},
+removendo espaços repetidos e escapando os caracteres \textit{'\textbackslash n'},
 de forma a assegurar que o output do programa é válido.
 
 \subsection{ID}
