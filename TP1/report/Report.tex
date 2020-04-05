@@ -55,20 +55,20 @@ Solino (A86435)}
 \pagebreak
 
 \chapter{Introdução}
-Este projeto tem como objetivo o processamento de um ficheiro \textit{HTML},
-contendo os comentários de uma notícia, de forma extrair todos os dados
+Este projeto tem como objetivo o processamento de um ficheiro \textit{HTML}
+contendo os comentários de uma notícia de forma a extrair todos os dados
 relevantes e transformá-los num formato \textit{JSON}.
 
-Para o processamento deste ficheiro, foi escrito um filtro de texto utilizando 
-o gerador \textit{FLex}, e a linguagem de programação C.
+Para o processamento deste ficheiro foi escrito um filtro de texto utilizando 
+o gerador \textit{FLex} e a linguagem de programação C.
 
-Em primeiro lugar, iremos analisar o problema, determinar que funcionalidades 
+Em primeiro lugar iremos analisar o problema, determinar que funcionalidades 
 implementar e identificar os desafios que serão necessários ultrapassar
 para implementar essas funcionalidades.
 
-Em seguida, iremos analisar a nossa solução, a estrutura do \textit{parser},
-como foram escolhidos os subcontextos e que expressões regulares foram
-escolhidas para os construir, e a estrutura do projeto onde iremos falar
+Em seguida iremos analisar a nossa solução, a estrutura do \textit{parser},
+como foram escolhidos os subcontextos, que expressões regulares foram
+escolhidas para os construir e a estrutura do projeto onde iremos falar
 das estruturas de dados utilizadas.
 
 Para concluir, iremos apresentar um pequeno manual de utilização do programa.
@@ -88,9 +88,9 @@ O programa tem que cumprir os seguintes requisitos:
 O ficheiro de \textit{input} apresentou vários problemas que precisa de ser
 tratados para conseguir cumprir os requisitos propostos.
 
-O primeiro sendo a codificação do ficheiro, estando codificado em \textit{latin1},
-e sendo preciso convertê-lo para \textit{UTF-8}, de forma a que o output do 
-programa não apareça com caracteres ilegíveis.
+O primeiro sendo a codificação do ficheiro que está em \textit{latin1} e é
+preciso converter para \textit{UTF-8} de forma a que o output do programa não
+apareça com caracteres ilegíveis.
 
 O segundo foi o facto de alguns dos comentários apresentados conterem mais do que
 uma linha, invalidando assim o \textit{JSON} de output se não forem tratados.
@@ -116,7 +116,7 @@ e onde estão contidos todos os subcontextos descritos abaixo.
 \subsection{CONTENT}
 
 Neste contexto é onde o conteúdo de cada resposta é tratado e formatado,
-removendo linhas em branco, e escapando os caracteres \textit{'\textbackslash n'},
+removendo linhas em branco e escapando os caracteres \textit{'\textbackslash n'},
 de forma a assegurar que o output do programa é válido.
 
 \subsection{ID}
@@ -131,23 +131,23 @@ os detalhes do utilizador criador do respetivo comentário.
 
 \subsection{DATE}
 
-No contexto DATE, é feito o processamento tanto da data do comentário, como
+No contexto DATE é feito o processamento tanto da data do comentário como
 a \textit{timestamp} do mesmo.
 
 \subsection{REPLY}
 
-No contexto REPLY, estamos dentro das respostas de um comentário. Aqui,
+No contexto REPLY estamos dentro das respostas de um comentário. Aqui,
 como o processamento é recursivo, voltamos a ter os contextos acima descritos,
 pois respostas são comentários normais.
 
 \section{Arquitetura do Projeto}
 
 Graças à simplicidade do projeto, foi-nos possível resolver o problema num
-só módulo, não comprometendo a legibilidade da solução. Neste módulo é tratado
+só módulo não comprometendo a legibilidade da solução. Neste módulo é tratado
 o input, selecionada a informação relevante presente e formatada para ir de
 encontro ao formato pretendido.
 
-Quando a estruturas de dados, apenas mantemos em memória uma \textit{stack}
+Quanto a estruturas de dados, apenas mantemos em memória uma \textit{stack}
 de contadores, para ser possível armazenar o número de respostas de um
 comentário, respeitando a recursividade do processamento no campo das respostas.
 Para a restante informação não nos foi necessário armazenar nada em memória,
@@ -160,8 +160,8 @@ HTML a ser processado, podendo ser chamado desta forma:
 \verb!./html2json path_to_input_file!.
 
 Depois de processado, o JSON resultante irá ser retornado pelo \textit{stdout}.
-Como o JSON não é formatado de uma forma muito legível, o programa pode ser
-encadeado com ferramentas processamento de JSON, como por exemplo, o \textit{jq},
+Como o JSON não é formatado de uma forma muito legível o programa pode ser
+encadeado com ferramentas processamento de JSON como, por exemplo, o \textit{jq},
 para facilitar a leitura do mesmo. Isto pode ser feito com o comando exemplo
 \verb!./html2json path_to_input_file | jq!. O resultado da formatação deste
 será mais uma vez retornado pelo \textit{stdout}.
@@ -171,7 +171,7 @@ será mais uma vez retornado pelo \textit{stdout}.
 Para concluir, fazemos um balanço bastante positivo do projeto, conseguindo
 atingir todos os requisitos definidos. A utilização de expressões regulares
 para tratamento de strings mostrou ser algo extremamente poderoso, permitindo
-simplificar tarefas, que de outra forma seriam muito mais trabalhosas e demoradas.
+simplificar tarefas que de outra forma seriam muito mais trabalhosas e demoradas.
 
 Como trabalho futuro, gostaríamos de trabalhar mais a formatação do output
 para facilitar a leitura do mesmo.
@@ -184,4 +184,3 @@ para facilitar a leitura do mesmo.
 {flex.l}
 
 \end{document}
-
