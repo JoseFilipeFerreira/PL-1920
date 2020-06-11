@@ -27,8 +27,8 @@ Cedofeita e foi...
 
 :CarolinaDA 
    :filho_de :OntinaL;
-   :name "Carolina Dias Antunes".
-   :casou_com :JorgeDomingos
+   :name "Carolina Dias Antunes";
+   :casou_com :JorgeDomingos .
 
 === :JorgeDomingos
 @tit: António Jorge Domingos

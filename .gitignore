@@ -1,6 +1,7 @@
 # Flex
 *.yy.c
 *.out
+*.tab.c
 
 # LaTeX
 *.aux
