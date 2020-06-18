@@ -1,4 +1,4 @@
-=== :OnorioL
+=== :OnórioL
 @tit: Onório de Lima
 
 # Infância no Brasil   
@@ -30,6 +30,9 @@ Cedofeita e foi...
    :name "Carolina Dias Antunes";
    :casou_com :JorgeDomingos .
 
+:JorgeDomingos
+    :yeet :OnórioL.
+
 === :JorgeDomingos
 @tit: António Jorge Domingos
 
@@ -43,4 +46,6 @@ e ficou ......
     :name  "António Jorge Domingos";
     :pai_de  :FranciscoSM .
 
+:OnórioL
+    :yeet :CarolinaDA.
 

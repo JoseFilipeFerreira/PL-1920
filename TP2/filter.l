@@ -2,25 +2,22 @@
 
 %x TT CT
 %%
-===             { return INIT; }
-:[^\ ,;.\n]+    { yylval.str = strdup(yytext + 1); return URI; }
+===                     { return INIT; }
+:img                    { yylval.str = strdup(yytext + 1); return IMG; }
+:[^\ ,;.\n]+            { yylval.str = strdup(yytext + 1); return URI; }
 
-@tit:[\ \n]     { BEGIN TT; };
-<TT>[^\n]+      { BEGIN CT; 
-                yylval.str = strdup(yytext);
-                return TIT; }
+@tit:[\ \n]             { BEGIN TT; };
+<TT>[^\n]+              { BEGIN CT; 
+                            yylval.str = strdup(yytext);
+                            return TIT; }
 
-@triplos:[\ \n] { return TR; };
+@triplos:[\ \n]         { return TR; };
 
+<CT>([^@\n]+\n)+/[\n@]  { yylval.str = strdup(yytext); return CONTEUDO; }
+<CT>@triplos:[\ \n]     { BEGIN INITIAL; return TR; }
+<CT>\n                  { }
 
-<CT>[^@]+      { yylval.str = strdup(yytext); 
-                    return CONTEUDO; }
-
-<CT>@triplos:[\ \n] { BEGIN INITIAL; return TR; };
-
-[a,;.]          { return yytext[0]; }
-
-\".+\"          { return STR; }
-
-.|\n            {  }
+[a,;.]                  { return yytext[0]; }
+\".+\"                  { yylval.str = strdup(yytext); return STR; }
+.|\n                    {  }
 %%
