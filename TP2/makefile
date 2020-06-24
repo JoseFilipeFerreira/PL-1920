@@ -1,4 +1,4 @@
-CFLAGS= -W -Wall -Wextra -O2 -D_GNU_SOURCE `pkg-config --cflags --libs glib-2.0`
+CFLAGS= -D_GNU_SOURCE
 EXEC=turtle
 
 $(EXEC): grammar.y filter.l
