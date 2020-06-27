@@ -12,10 +12,6 @@ Cedofeita e foi...
 
 ...parágrafos separados por linhas em branco
 
-@meta:
-:birth_place :reverse_of :born_here .
-:filho_de :reverse_of :pai_de.
-
 @triplos:
 :OnórioL 
    a     :Person  ,

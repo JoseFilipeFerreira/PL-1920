@@ -37,24 +37,24 @@ GHashTable* mkindex(char*);
 
 %token INIT TR IMG MT INV
 %token<str> STR CONTEUDO TIT URI 
-%type<str> Sujeito Par Pares Conteudo Rinv
+%type<str> Sujeito Par Pares Conteudo Rel
 %type<comp> Comp
 %type<comps> Comps
 
 %%
 
 Caderno : Conceitos
+        | Meta
         ;
 
 Conceitos   : Conceito
             | Conceitos Conceito
 
-Conceito    : Documento MT Meta TR Triplos
-            | Documento TR Triplos
+Conceito    : Documento TR Triplos
             ;
 
 Documento   : INIT Sujeito Titulo Conteudo          { fprintf(file, "%s", $4); fclose(file); 
-                                                        free($4); free($2); revptr = 0; curr_rev = NULL; }
+                                                        free($4); free($2); curr_rev = NULL; }
             ;
 
 Meta : Meta URI INV URI '.'             { reverse[revptr++] = strdup($2); reverse[revptr++] = strdup($4); }
@@ -69,12 +69,13 @@ Pares   : Par                           { }
         | Pares ';' Par                 { }
         ;
 
-Par     : Rinv Comps                    { GArray* list = get_or_insert_list($1, suj); g_array_append_vals(list, $2->data, $2->len); curr_rev = NULL; }
-        | Ra Comps                      { GArray* list = get_or_insert_list("a", suj); g_array_append_vals(list, $2->data, $2->len); curr_rev = NULL; }
-        | IMG Comps                     { GArray* list = get_or_insert_list("IMG", suj); g_array_append_vals(list, $2->data, $2->len); curr_rev = NULL; }
+Par     : Rel Comps                    { GArray* list = get_or_insert_list($1, suj); 
+                                                g_array_append_vals(list, $2->data, $2->len); 
+                                                curr_rev = NULL; }
         ;
 
-Comps   : Comp                          { $$ = g_array_new(FALSE, FALSE, sizeof(struct cmp*)); g_array_append_val($$, $1); }
+Comps   : Comp                          { $$ = g_array_new(FALSE, FALSE, sizeof(struct cmp*)); 
+                                                g_array_append_val($$, $1); }
         | Comps ',' Comp                { $$ = $1; g_array_append_val($$, $3); }
         ;
 
@@ -85,19 +86,26 @@ Comp    : URI                           { mkindex($1);
                                             $$->type = 1;
                                             free($1);
                                         }
-        | STR                           { $$ = malloc(sizeof(struct cmp)); $$->str = strdup($1); $$->type = 0; free($1); }
+        | STR                           { $$ = malloc(sizeof(struct cmp)); 
+                                                $$->str = strdup($1); 
+                                                $$->type = 0; 
+                                                free($1); }
         ;
 
-Sujeito : URI                           { suj = mkindex($1); $$ = strdup($1); sujeito = $$; file = fopen($1, "a"); free($1); }
+Sujeito : URI                           { suj = mkindex($1); 
+                                            $$ = strdup($1); 
+                                            sujeito = $$; 
+                                            file = fopen($1, "a"); 
+                                            free($1); }
         ;
 
 Titulo  : TIT                           { fprintf(file, "<h1>%s</h1>\n", $1); free($1); }
         ;
 
-Ra      : 'a'                           { is_a = 1; }
+Rel     : 'a'                           { is_a = 1; $$ = strdup("a"); }
+        | URI                           { curr_rev = findrev($1); $$ = strdup($1); }
+        | IMG                           { $$ = strdup("IMG"); }
         ;
-
-Rinv : URI                              { curr_rev = findrev($1); $$ = strdup($1); }
 
 Conteudo : CONTEUDO                     { asprintf(&$$, "<p>%s</p>\n", $1); free($1); }
          | Conteudo CONTEUDO            { asprintf(&$$, "%s<p>%s</p>\n", $1, $2); free($1); free($2); }
@@ -207,10 +215,15 @@ int yyerror(char *s)
   fprintf(stderr, "ERRO: %s \n", s);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     props = g_hash_table_new(g_str_hash, g_str_equal);
+    yyin = fopen("reverse", "r");
     yyparse();
+    for(int i = 1; i < argc; i++) {
+        yyin = fopen(argv[i], "r");
+        yyparse();
+    }
     g_hash_table_foreach(props, run_table, NULL);
     return(0);
 }
