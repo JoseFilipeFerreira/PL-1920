@@ -216,11 +216,21 @@ int yyerror(char *s)
 int main(int argc, char* argv[])
 {
     props = g_hash_table_new(g_str_hash, g_str_equal);
-    yyin = fopen("reverse", "r");
-    yyparse();
-    for(int i = 1; i < argc; i++) {
-        yyin = fopen(argv[i], "r");
+    FILE* f = fopen("reverse", "r");
+    if(f != NULL) {
+        yyin = f;
         yyparse();
+        fclose(f);
+    }
+    for(int i = 1; i < argc; i++) {
+        f = fopen(argv[i], "r");
+        if(f != NULL) {
+            yyin = f;
+            yyparse();
+            fclose(f);
+        }
+        else 
+            fprintf(stderr, "Ficheiro %s inválido\n", argv[i]);
     }
     g_hash_table_foreach(props, (GHFunc) run_table, NULL);
     return(0);
