@@ -25,7 +25,7 @@ linkcolor=black}
 
 \title{DSL para Cadernos de Anotações em HD \\
 \large TP2 - Exercício 2 - Grupo 7}
-\author{Joao Teixeira (A85504) \and Jose Filipe Ferreira (A83683) \and Miguel
+\author{João Teixeira (A85504) \and José Filipe Ferreira (A83683) \and Miguel
 Solino (A86435)}
 \date{\today}
 
@@ -71,7 +71,7 @@ posterior criação do site \textit{HTML}.
 Ao longo deste relatório iremos expor o problema, e explicar a solução
 encontrada, começando por falar da arquitetura e estruturas de dados, explicando
 a gramática definida e entrando em maior detalhe sobre como é efetuado o
-processamendo de cada caderno. Por fim, iremos apresentar também um pequeno
+processamento de cada caderno. Por fim, iremos apresentar também um pequeno
 manual de utilização do programa criado.
 
 \chapter{Problema}
@@ -101,10 +101,10 @@ o resto escrito diretamente na página correspondente ao sujeito em
 processamento. 
 
 Mas por forma a obter um aspeto mais consistente em todas as páginas
-construidas, são agora armazenadas todas as informações dos triplos.
+construídas, são agora armazenadas todas as informações dos triplos.
 Para conseguirmos isto, criamos estruturas de dados semelhantes ao formato dos
 tripos, um \textit{HashMap}, indexado por sujeito, fazendo corresponder a cada
-indice, um segundo \textit{HashMap}, este indexado pela relação e contendo uma
+índice, um segundo \textit{HashMap}, este indexado pela relação e contendo uma
 lista de objetos.
 
 \begin{figure}[H]
@@ -122,28 +122,28 @@ sendo a maioria marcadores ou separadores de estados (INIT, TR, IMG, MT, INV).
 Os restantes correspondem a dados vindos do ficheiro de entrada, sendo estes, o
 STR, que corresponde a quando um objeto de um triplo é uma string, o CONTEUDO,
 correspondendo a um parágrafo do texto de um tópico, o TIT que corresponde ao
-título do texto de um tópico e por fim os URI, que correpondem aos tópicos,
+título do texto de um tópico e por fim os URI, que correspondem aos tópicos,
 sujeitos ou objetos (normalmente começados por \textit{:}).
 
 \subsection{Meta} 
 
 Esta secção corresponde ao reconhecimento do ficheiro que contém os triplos
-inversos, reconhecidos com a ajuda do simbolo terminal INV, retornado pelo flex
+inversos, reconhecidos com a ajuda do símbolo terminal INV, retornado pelo flex
 quando é encontrada a relação \textit{:inverseOf}.
 
 \subsection{Conceito}
 
 Um caderno é um conjunto de pares (Documento, Triplos), sendo a representação
-de cada um deste pares um conceito. É aqui que é utilizado o simbolo terminal
+de cada um deste pares um conceito. É aqui que é utilizado o símbolo terminal
 TR, que marca a separação entre o Documento e os Triplos.
 
 \subsection{Documento}
 
 Um Documento é onde é reconhecido o texto de um conceito, e é separado em quatro
-partes, um simbolo terminal INIT, que marca o ínicio de um documento, o Sujeito,
+partes, um símbolo terminal INIT, que marca o inicio de um documento, o Sujeito,
 dizendo o objeto ao qual o documento se refere, um título, com o título do
-texto, e o conteudo, sendo este um conjunto de parágrafos, que formam o texto em
-sí.
+texto, e o conteúdo, sendo este um conjunto de parágrafos, que formam o texto em
+si.
 
 \subsection{Triplos}
 
@@ -160,25 +160,25 @@ strings, denominada de Comps.
 
 \subsection{Rel}
 
-Rel corresponde às relações entre os sujietos e objetos, ao segundo elemento dos
+Rel corresponde às relações entre os sujeitos e objetos, ao segundo elemento dos
 triplos da notação turtle. Existem vários tipos de relações, existindo duas que
 possuem um comportamento diferente das outras, a relação 'a' e a relação ':img'.
 Numa relação do tipo 'a' os objetos correspondem ao tipo do sujeito do triplo.
 Numa relação do tipo ':img' é especificada uma imagem para ser mostrada no site
-\textit{HTML}, na pagína do sujeito do triplo.
+\textit{HTML}, na pagina do sujeito do triplo.
 
 \section{Processamento de um Caderno}
 
-Para processar um caderno, constituido por vários pares (documento, triplos),
+Para processar um caderno, constituído por vários pares (documento, triplos),
 processam-se cada um dos pares.
 
 Para processar um destes pares, começa-se por validar e tratar a parte do
 documento, verificando se começa por verificar se começa pelo identificador de
 início de documento, valida-se o sujeito, e cria-se a sua respetiva página
 \textit{HTML} caso ainda não exista, e adiciona-se informação sobre este na
-pagína do indice. Depois é processado o título do documento, escrevendo-o com a
+pagina do índice. Depois é processado o título do documento, escrevendo-o com a
 formatação respetiva para títulos \textit{HTML} no ficheiro do sujeito. Em
-seguida é processado o texto em sí, formatando-o e escrevendo-o diretamente na
+seguida é processado o texto em si, formatando-o e escrevendo-o diretamente na
 página do sujeito em questão.
 
 Depois do processamento da parte inicial do par, passa-se à parte dos triplos.
@@ -188,7 +188,7 @@ explicada. Para processar os Pares, que é uma lista de pares (Rel, Comps),
 percorre-se esta lista recursivamente, processando cada um dos pares
 individualmente.
 
-Para processaar um par do tipo (Rel, Comps), começamos por processar o primeiro
+Para processar um par do tipo (Rel, Comps), começamos por processar o primeiro
 elemento, Rel, que corresponde ao segundo elemento dos tripos em notação turtle.
 Depois de validada pelo flex, é procurada a relação inversa e guardada, para
 quando forem processados os objetos presentes no terceiro e ultimo elemento dos
