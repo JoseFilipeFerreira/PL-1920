@@ -62,13 +62,13 @@ o formato descrito no enunciado fornecido.
 
 Para a construção de um processador capaz disto, primeiro foi escrita uma
 gramática capaz de definir a DSL de \textit{caderno de anotação}. Em seguida foi
-escrito um filtro de texto com recurso a \textit{FLex}, de forma a ser capaz de
+escrito um filtro de texto com recurso a \textit{FLex} de forma a ser capaz de
 fazer corresponder o texto de entrada à gramática anteriormente descrita. Para
 finalizar, com recurso a \textit{yacc}, foram definidas as ações que
-correspondem a cada parte da gramática, para efetuar o \textit{parsing} e
+correspondem a cada parte da gramática para efetuar o \textit{parsing} e
 posterior criação do site \textit{HTML}.
 
-Ao longo deste relatório iremos expor o problema, e explicar a solução
+Ao longo deste relatório iremos expor o problema e explicar a solução
 encontrada, começando por falar da arquitetura e estruturas de dados, explicando
 a gramática definida e entrando em maior detalhe sobre como é efetuado o
 processamento de cada caderno. Por fim, iremos apresentar também um pequeno
@@ -80,10 +80,10 @@ O programa tem que cumprir os seguintes requisitos:
 \begin{itemize}
     \item Reconhecer e validar vários cadernos de anotações;
     \item Criar uma página \textit{HTML} por cada tópico, sujeito ou objeto
-        presente no caderno, agrupando toda a informação respetiva ao mesmo;
+        presente no caderno agrupando toda a informação respetiva ao mesmo;
     \item Incluir na página de um sujeito uma imagem sempre que apareça no
         caderno um par do tipo \textit{:x :img "img.jpg"};
-    \item Ter a possibilidade de referir triplos inversos, por forma a melhorar
+    \item Ter a possibilidade de referir triplos inversos por forma a melhorar
         a organização da informação no site criado;
 \end{itemize}
 
@@ -91,7 +91,7 @@ O programa tem que cumprir os seguintes requisitos:
 
 \section{Arquitetura do Projeto}
 
-A nossa solução divide-se em dois módulos, um correspondente ao filtro de texto,
+A nossa solução divide-se em dois módulos: um correspondente ao filtro de texto
 e um correspondente à parte da gramática, armazenamento e processamento do
 ficheiro de entrada e criação do site \textit{HTML}.
 
@@ -103,9 +103,9 @@ processamento.
 Mas por forma a obter um aspeto mais consistente em todas as páginas
 construídas, são agora armazenadas todas as informações dos triplos.
 Para conseguirmos isto, criamos estruturas de dados semelhantes ao formato dos
-tripos, um \textit{HashMap}, indexado por sujeito, fazendo corresponder a cada
-índice, um segundo \textit{HashMap}, este indexado pela relação e contendo uma
-lista de objetos.
+triplos. Sendo este um \textit{HashMap} indexado por sujeito e fazendo
+corresponder a cada índice um segundo \textit{HashMap}, sendo este indexado pela
+relação e contendo uma lista de objetos.
 
 \begin{figure}[H]
     \centering
@@ -173,9 +173,9 @@ Para processar um caderno, constituído por vários pares (documento, triplos),
 processam-se cada um dos pares.
 
 Para processar um destes pares, começa-se por validar e tratar a parte do
-documento, verificando se começa por verificar se começa pelo identificador de
-início de documento, valida-se o sujeito, e cria-se a sua respetiva página
-\textit{HTML} caso ainda não exista, e adiciona-se informação sobre este na
+documento, verificando se começa pelo identificador de início de documento,
+valida-se o sujeito, e cria-se a sua respetiva página \textit{HTML} caso ainda
+não exista, e adiciona-se informação sobre este na
 pagina do índice. Depois é processado o título do documento, escrevendo-o com a
 formatação respetiva para títulos \textit{HTML} no ficheiro do sujeito. Em
 seguida é processado o texto em si, formatando-o e escrevendo-o diretamente na
