@@ -1,4 +1,4 @@
-CFLAGS= -g -D_GNU_SOURCE `pkg-config --cflags --libs glib-2.0`
+CFLAGS= -D_GNU_SOURCE `pkg-config --cflags --libs glib-2.0`
 EXEC=turtle
 
 $(EXEC): grammar.y filter.l
