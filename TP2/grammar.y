@@ -183,7 +183,7 @@ void run_table(char* key, void* value, void* v) {
     void* k;
     GArray* val;
 
-    if(g_hash_table_steal_extended(value, "img", k, &val)) {
+    if(g_hash_table_steal_extended(value, "img", k, (void*) &val)) {
         fprintf(f, "<p>", key);
         for(int i = 0; i < val->len; i++) {
             t = g_array_index(val, struct cmp*, i);
@@ -192,7 +192,7 @@ void run_table(char* key, void* value, void* v) {
         fprintf(f, "</p>\n");
     }
 
-    if(g_hash_table_steal_extended(value, "a", k, &val)) {
+    if(g_hash_table_steal_extended(value, "a", k, (void*) &val)) {
         fprintf(f, "<p>", key);
         for(int i = 0; i < val->len; i++) {
             t = g_array_index(val, struct cmp*, i);
@@ -205,7 +205,7 @@ void run_table(char* key, void* value, void* v) {
     }
     fclose(f);
 
-    g_hash_table_foreach(value, run_table_2, key);
+    g_hash_table_foreach(value, (GHFunc) run_table_2, key);
 }
 
 int yyerror(char *s)
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
         yyin = fopen(argv[i], "r");
         yyparse();
     }
-    g_hash_table_foreach(props, run_table, NULL);
+    g_hash_table_foreach(props, (GHFunc) run_table, NULL);
     return(0);
 }
 
