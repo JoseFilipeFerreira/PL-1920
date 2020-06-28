@@ -13,7 +13,6 @@ char* sujeito;
 char* reverse[100];
 int revptr;
 char* curr_rev;
-int is_a;
 
 struct cmp {
     int type;
@@ -35,7 +34,7 @@ GHashTable* mkindex(char*);
     GArray* comps;
 }
 
-%token INIT TR IMG MT INV
+%token INIT TR MT INV
 %token<str> STR CONTEUDO TIT URI 
 %type<str> Sujeito Par Pares Conteudo Rel
 %type<comp> Comp
@@ -102,9 +101,8 @@ Sujeito : URI                           { suj = mkindex($1);
 Titulo  : TIT                           { fprintf(file, "<h1>%s</h1>\n", $1); free($1); }
         ;
 
-Rel     : 'a'                           { is_a = 1; $$ = strdup("a"); }
+Rel     : 'a'                           { $$ = strdup("a"); }
         | URI                           { curr_rev = findrev($1); $$ = strdup($1); }
-        | IMG                           { $$ = strdup("IMG"); }
         ;
 
 Conteudo : CONTEUDO                     { asprintf(&$$, "<p>%s</p>\n", $1); free($1); }
@@ -185,7 +183,7 @@ void run_table(char* key, void* value, void* v) {
     void* k;
     GArray* val;
 
-    if(g_hash_table_steal_extended(value, "IMG", k, &val)) {
+    if(g_hash_table_steal_extended(value, "img", k, &val)) {
         fprintf(f, "<p>", key);
         for(int i = 0; i < val->len; i++) {
             t = g_array_index(val, struct cmp*, i);

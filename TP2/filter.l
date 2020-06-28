@@ -3,7 +3,6 @@
 %x TT CT
 %%
 ===                     { return INIT; }
-:img                    { yylval.str = strdup(yytext + 1); return IMG; }
 :reverse_of             { return INV; }
 :[^\ ,;.\n]+            { yylval.str = strdup(yytext + 1); return URI; }
 

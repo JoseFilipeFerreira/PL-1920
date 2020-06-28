@@ -58,7 +58,7 @@ Solino (A86435)}
 
 \chapter{Introdução}
 Com este projeto pretende-se processar um conjunto de cadernos de anotações, com
-o formato descrito em \ref{apx:example}.
+o formato descrito no enunciado fornecido.
 
 Para a construção de um processador capaz disto, primeiro foi escrita uma
 gramática capaz de definir a DSL de \textit{caderno de anotação}. Em seguida foi
@@ -67,6 +67,12 @@ fazer corresponder o texto de entrada à gramática anteriormente descrita. Para
 finalizar, com recurso a \textit{yacc}, foram definidas as ações que
 correspondem a cada parte da gramática, para efetuar o \textit{parsing} e
 posterior criação do site \textit{HTML}.
+
+Ao longo deste relatório iremos expor o problema, e explicar a solução
+encontrada, começando por falar da arquitetura e estruturas de dados, explicando
+a gramática definida e entrando em maior detalhe sobre como é efetuado o
+processamendo de cada caderno. Por fim, iremos apresentar também um pequeno
+manual de utilização do programa criado.
 
 \chapter{Problema}
 
@@ -100,6 +106,12 @@ Para conseguirmos isto, criamos estruturas de dados semelhantes ao formato dos
 tripos, um \textit{HashMap}, indexado por sujeito, fazendo corresponder a cada
 indice, um segundo \textit{HashMap}, este indexado pela relação e contendo uma
 lista de objetos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth]{data_struct.png}
+    \caption{Esquema da estrutura de dados do programa}
+\end{figure}
 
 \section{Especificação da gramática}
 
@@ -172,7 +184,26 @@ página do sujeito em questão.
 Depois do processamento da parte inicial do par, passa-se à parte dos triplos.
 O processamento dos triplos corresponde processar recursivamente pares do tipo
 (Sujeito, Pares). O processamento do sujeito decorre da forma anteriormente
-explicada.
+explicada. Para processar os Pares, que é uma lista de pares (Rel, Comps),
+percorre-se esta lista recursivamente, processando cada um dos pares
+individualmente.
+
+Para processaar um par do tipo (Rel, Comps), começamos por processar o primeiro
+elemento, Rel, que corresponde ao segundo elemento dos tripos em notação turtle.
+Depois de validada pelo flex, é procurada a relação inversa e guardada, para
+quando forem processados os objetos presentes no terceiro e ultimo elemento dos
+triplos da notação turtle, ser possível guardar de imediato nas nossas 
+estruturas de dados a informação sobre não só a relação a ser processada, mas
+também o seu inverso.
+
+Por último, processamos o tipo Comps, que corresponde a uma lista de strings ou
+objetos (URI). Aqui é criada uma lista guardada em memória, com todos os
+elementos da relação, e guardados na estrutura de dados criada para o efeito,
+já tendo em conta as relações inversas.
+
+Processados todos os cadernos passados ao programa, é percorrida a nossa
+estrutura de dados, por forma a preencher as páginas \textit{HTML} com a
+respetiva informação.
 
 \chapter{Manual de Utilização}
 
@@ -186,7 +217,9 @@ abrir o ficheiro \textit{index.html} com um qualquer browser.
 \chapter{Conclusão}
 
 Para concluir, fazemos um balanço bastante positivo do projeto, conseguindo
-atingir todos os requisitos definidos. 
+atingir todos os requisitos definidos, conseguindo com sucesso aplicar os
+conhecimentos adquiridos ao longo desta Unidade Curricular num contexto mais
+prático.
 
 \appendix
 
@@ -195,9 +228,7 @@ atingir todos os requisitos definidos.
 {../filter.l}
 
 \chapter{Yacc} \label{apx:yacc}
-\lstinputlisting[basicstyle=\scriptsize\ttfamily, firstline=32, lastline=113]
+\lstinputlisting[basicstyle=\scriptsize\ttfamily, firstline=31, lastline=112]
 {../grammar.y}
-
-\chapter{Exemplo de Input} \label{apx:example}
 
 \end{document}
