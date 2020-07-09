@@ -16,9 +16,15 @@ y.tab.c: grammar.y
 lex.yy.c: filter.l
 	$(LEX) filter.l
 
+clean:
+	rm -f y.tab.c lex.yy.c $(EXEC)
+
 install: $(EXEC)
 	sudo mv $(EXEC) /usr/local/bin
-	cp $(REVERSE) ~/.turtle || exit 0
+	- cp $(REVERSE) $(HOME)/.turtle
 
 uninstall:
 	rm /usr/local/bin/$(EXEC)
+
+dist:
+	tar -czf $(EXEC).tgz grammar.y filter.l makefile reverse example_input

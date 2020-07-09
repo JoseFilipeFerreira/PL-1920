@@ -25,6 +25,7 @@
 
 [a,;.]                  { return yytext[0]; }
 \".+\"                  { yylval.str = strdup(yytext); return STR; }
-.|\n                    {  }
+[\ \t\n]                { }
+.                       { yyerror("Caracter Inválido"); }
 \/\/.*                  { }
 %%

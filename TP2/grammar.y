@@ -23,6 +23,7 @@ struct cmp {
 
 GHashTable* props;
 GHashTable* suj;
+GHashTable* URI_name;
 
 GHashTable* get_or_insert_hash(char*);
 GArray* get_or_insert_list(char*, GHashTable*);
@@ -222,6 +223,7 @@ void run_table(char* key, void* value, void* v) {
         }
         fprintf(f, "</p>\n");
     }
+    fprintf(f, "<p><h3>%s:</h3></p>", key);
 
     g_hash_table_foreach(value, (GHFunc) run_table_2, key);
     fprintf(f, "</body></html>\n");
@@ -231,7 +233,7 @@ void run_table(char* key, void* value, void* v) {
 
 int yyerror(char *s)
 {
-  fprintf(stderr, "ERRO: %s na linha %d\n", s, yylineno);
+  fprintf(stderr, "ERRO: %s na linha %d: %s\n", s, yylineno, yytext);
 }
 
 int main(int argc, char* argv[])
