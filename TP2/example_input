@@ -1,0 +1,57 @@
+// This is an example comment
+=== :OnórioL
+// This is an example comment
+@tit: Onório de Lima
+
+# Infância no Brasil   
+
+Onório de Lima viveu ...
+
+# Percurso cultural no Porto
+
+Entre 1873 e 1930 Onório de Lima viveu no Porto,
+Cedofeita e foi...
+
+...parágrafos separados por linhas em branco
+
+@triplos:
+// This is an example comment
+:OnórioL 
+   a     :Person  ,
+// This is an example comment
+        :Mecenas_cultural  ;
+   :Name  "Onório de Lima" ; 
+   :birth_place :Brasil ;
+   :viveu_em :Porto, 
+           :Gerês ;
+   :img "OnórioDL1.jpg" .
+
+:OnórioL 
+// This is an example comment
+   :pai_de :OndinaL .
+
+:CarolinaDA 
+   :filho_de :OntinaL;
+// This is an example comment
+   :name "Carolina Dias Antunes";
+   :casou_com :JorgeDomingos .
+
+:JorgeDomingos
+    :yeet :OnórioL.
+
+=== :JorgeDomingos
+@tit: António Jorge Domingos
+
+O Dr. António Jorge Domingos nasceu em Angola
+e ficou ......
+
+@triplos:
+:JorgeDomingos 
+    a :Person,
+      :Etnólogo;
+    :name  "António Jorge Domingos";
+    :pai_de  :FranciscoSM .
+
+:OnórioL
+    :yeet :CarolinaDA.
+

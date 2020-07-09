@@ -1,6 +1,7 @@
 # Flex
 *.yy.c
 *.out
+*.tab.c
 
 # LaTeX
 *.aux
@@ -8,3 +9,5 @@
 *.toc
 
 html2json
+*.html
+*.tgz
