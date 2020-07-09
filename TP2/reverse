@@ -1,0 +1,2 @@
+:birth_place :reverse_of :born_here .
+:filho_de :reverse_of :pai_de.
