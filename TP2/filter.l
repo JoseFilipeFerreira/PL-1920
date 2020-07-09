@@ -15,6 +15,7 @@
 
 <CT>@meta:[\ \n]        { BEGIN INITIAL; return MT; }
 
+
 <CT>\#\ ([^@\n]+\n)+/[\n@]          { yylval.str = strdup(yytext + 2); return H2; }
 <CT>\#\#\ ([^@\n]+\n)+/[\n@]        { yylval.str = strdup(yytext + 3); return H3; }
 <CT>\#\#\#\ ([^@\n]+\n)+/[\n@]      { yylval.str = strdup(yytext + 4); return H4; }
@@ -25,4 +26,5 @@
 [a,;.]                  { return yytext[0]; }
 \".+\"                  { yylval.str = strdup(yytext); return STR; }
 .|\n                    {  }
+\/\/.*                  { }
 %%

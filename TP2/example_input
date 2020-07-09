@@ -1,4 +1,6 @@
+// This is an example comment
 === :OnórioL
+// This is an example comment
 @tit: Onório de Lima
 
 # Infância no Brasil   
@@ -13,8 +15,10 @@ Cedofeita e foi...
 ...parágrafos separados por linhas em branco
 
 @triplos:
+// This is an example comment
 :OnórioL 
    a     :Person  ,
+// This is an example comment
         :Mecenas_cultural  ;
    :Name  "Onório de Lima" ; 
    :birth_place :Brasil ;
@@ -23,10 +27,12 @@ Cedofeita e foi...
    :img "OnórioDL1.jpg" .
 
 :OnórioL 
+// This is an example comment
    :pai_de :OndinaL .
 
 :CarolinaDA 
    :filho_de :OntinaL;
+// This is an example comment
    :name "Carolina Dias Antunes";
    :casou_com :JorgeDomingos .
 
