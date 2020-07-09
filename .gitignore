@@ -9,3 +9,5 @@
 *.toc
 
 html2json
+*.html
+*.tgz
