@@ -10,6 +10,9 @@ void mkrev(char*);
 char* findrev(char*);
 FILE* file;
 FILE* open_html(char*, char*);
+void add_title(char*, char*);
+void write_title(char*, FILE*);
+char* get_title(char*);
 char* sujeito;
 char* reverse[100];
 int revptr;
@@ -20,10 +23,14 @@ struct cmp {
     char* str;
 };
 
+struct title {
+    char* str;
+    int written;
+};
 
 GHashTable* props;
 GHashTable* suj;
-GHashTable* URI_name;
+GHashTable* title;
 
 GHashTable* get_or_insert_hash(char*);
 GArray* get_or_insert_list(char*, GHashTable*);
@@ -100,7 +107,7 @@ Sujeito : URI                           { suj = mkindex($1);
                                             free($1); }
         ;
 
-Titulo  : TIT                           { fprintf(file, "<h1>%s</h1>\n", $1); free($1); }
+Titulo  : TIT                           { fprintf(file, "<h1>%s</h1>\n", $1); add_title(sujeito, $1); free($1); }
         ;
 
 Rel     : 'a'                           { $$ = strdup("a"); }
@@ -145,6 +152,36 @@ GArray* get_or_insert_list(char* uri, GHashTable* p) {
     }
     return r;
 }
+
+void add_title(char* uri, char* t) {
+    struct title* ta = malloc(sizeof(struct title));
+    ta->written = 1;
+    ta->str = strdup(t);
+    g_hash_table_insert(title, strdup(uri), ta);
+}
+
+
+char* get_title(char* uri) {
+    struct title* r = g_hash_table_lookup(title, uri);
+    if(r == NULL || r->str == NULL) return uri;
+    return r->str;
+}
+
+void write_title(char* uri, FILE* f) {
+    struct title* r = g_hash_table_lookup(title, uri);
+    if(r == NULL) {
+        fprintf(f, "<p><h1>%s</h1></p>\n", uri);
+        r = malloc(sizeof(struct title));
+        r->written = 1;
+        r->str = NULL;
+        g_hash_table_insert(title, strdup(uri), r);
+    }
+    else if(!r->written) {
+        fprintf(f, "<p><h1>%s</h1></p>\n", uri);
+        r->written = 1;
+    }
+}
+    
 
 GHashTable* mkindex(char* uri) {
     GHashTable* r = get_or_insert_table(uri);
@@ -192,7 +229,7 @@ void run_table_2(char* key, GArray* value, void* v) {
         if(!t->type)
             fprintf(f, "%s ", t->str);
         else
-            fprintf(f, "<a href=\"%s.html\">%s</a> ", t->str, t->str);
+            fprintf(f, "<a href=\"%s.html\">%s</a> ", t->str, get_title(t->str));
     }
     fprintf(f, "</p>\n");
 }
@@ -202,7 +239,8 @@ void run_table(char* key, void* value, void* v) {
     struct cmp* t;
     void* k;
     GArray* val;
-
+    char* r = g_hash_table_lookup(title, key);
+    write_title(key, f);
     if(g_hash_table_steal_extended(value, "img", k, (void*) &val)) {
         fprintf(f, "<p>", key);
         for(int i = 0; i < val->len; i++) {
@@ -218,12 +256,12 @@ void run_table(char* key, void* value, void* v) {
             t = g_array_index(val, struct cmp*, i);
             fprintf(f, "<a href=\"%s.html\">%s</a> ", t->str, t->str);
             FILE* fr = open_html(t->str, "a");
-            fprintf(fr, "<p><a href=\"%s.html\">%s</a></p>\n", key, key);
+            write_title(t->str, fr);
+            fprintf(fr, "<p><a href=\"%s.html\">%s</a></p>\n", key, get_title(key));
             fclose(fr);
         }
         fprintf(f, "</p>\n");
     }
-    fprintf(f, "<p><h3>%s:</h3></p>", key);
 
     g_hash_table_foreach(value, (GHFunc) run_table_2, key);
     fprintf(f, "</body></html>\n");
@@ -242,6 +280,7 @@ int main(int argc, char* argv[])
     fprintf(f, "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>Turtle Parser</title></head><body>\n");
     fclose(f);
     props = g_hash_table_new(g_str_hash, g_str_equal);
+    title = g_hash_table_new(g_str_hash, g_str_equal);
     char* fname;
     asprintf(&fname, "%s/.turtle", getenv("HOME"));
     f = fopen(fname, "r");
