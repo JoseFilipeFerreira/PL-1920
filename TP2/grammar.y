@@ -35,8 +35,8 @@ GHashTable* mkindex(char*);
 }
 
 %token INIT TR MT INV
-%token<str> STR CONTEUDO TIT URI 
-%type<str> Sujeito Par Pares Conteudo Rel
+%token<str> STR CONTEUDO TIT URI H2 H3 H4
+%type<str> Sujeito Par Pares Conteudo Rel Paragrafo
 %type<comp> Comp
 %type<comps> Comps
 
@@ -105,9 +105,15 @@ Rel     : 'a'                           { $$ = strdup("a"); }
         | URI                           { curr_rev = findrev($1); $$ = strdup($1); }
         ;
 
-Conteudo : CONTEUDO                     { asprintf(&$$, "<p>%s</p>\n", $1); free($1); }
-         | Conteudo CONTEUDO            { asprintf(&$$, "%s<p>%s</p>\n", $1, $2); free($1); free($2); }
+Conteudo : Paragrafo                     { asprintf(&$$, "<p>%s</p>\n", $1); free($1); }
+         | Conteudo Paragrafo            { asprintf(&$$, "%s<p>%s</p>\n", $1, $2); free($1); free($2); }
          ;
+
+Paragrafo : CONTEUDO                    { asprintf(&$$, "%s", $1); free($1); }
+          | H2                          { asprintf(&$$, "<h2>%s</h2>", $1); free($1); }
+          | H3                          { asprintf(&$$, "<h3>%s</h3>", $1); free($1); }
+          | H4                          { asprintf(&$$, "<h4>%s</h4>", $1); free($1); }
+          ;
 %%
 
 #include "lex.yy.c"
@@ -137,6 +143,7 @@ GHashTable* mkindex(char* uri) {
         fprintf(f, "<p><a href=\"%s\">%s</a></p>\n", uri, uri); 
         fclose(f);
         f = fopen(uri, "a");
+        fprintf(f, "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>Titulo da página</title></head><body>\n");
         fprintf(f, "<p><a href=\"index.html\">Index</a></p>\n"); 
         fclose(f);
         g_hash_table_insert(props, strdup(uri), r);
@@ -203,20 +210,25 @@ void run_table(char* key, void* value, void* v) {
         }
         fprintf(f, "</p>\n");
     }
-    fclose(f);
 
     g_hash_table_foreach(value, (GHFunc) run_table_2, key);
+    fprintf(f, "</body></html>\n");
+
+    fclose(f);
 }
 
 int yyerror(char *s)
 {
-  fprintf(stderr, "ERRO: %s \n", s);
+  fprintf(stderr, "ERRO: %s na linha %d\n", s, yylineno);
 }
 
 int main(int argc, char* argv[])
 {
+    FILE* f = fopen("index.html", "a");
+    fprintf(f, "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>Titulo da página</title></head><body>\n");
+    fclose(f);
     props = g_hash_table_new(g_str_hash, g_str_equal);
-    FILE* f = fopen("reverse", "r");
+    f = fopen("reverse", "r");
     if(f != NULL) {
         yyin = f;
         yyparse();
@@ -233,6 +245,9 @@ int main(int argc, char* argv[])
             fprintf(stderr, "Ficheiro %s inválido\n", argv[i]);
     }
     g_hash_table_foreach(props, (GHFunc) run_table, NULL);
+    f = fopen("index.html", "a");
+    fprintf(f, "</body></html>\n");
+    fclose(f);
     return(0);
 }
 
