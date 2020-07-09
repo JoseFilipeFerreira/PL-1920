@@ -9,6 +9,7 @@ int yyerror(char* s);
 void mkrev(char*);
 char* findrev(char*);
 FILE* file;
+FILE* open_html(char*, char*);
 char* sujeito;
 char* reverse[100];
 int revptr;
@@ -94,7 +95,7 @@ Comp    : URI                           { mkindex($1);
 Sujeito : URI                           { suj = mkindex($1); 
                                             $$ = strdup($1); 
                                             sujeito = $$; 
-                                            file = fopen($1, "a"); 
+                                            file = open_html($1, "a"); 
                                             free($1); }
         ;
 
@@ -118,6 +119,14 @@ Paragrafo : CONTEUDO                    { asprintf(&$$, "%s", $1); free($1); }
 
 #include "lex.yy.c"
 
+FILE* open_html(char* uri, char* type) {
+    char* html;
+    asprintf(&html, "%s.html", uri);
+    FILE* r = fopen(html, type);
+    free(html);
+    return r;
+}
+
 GHashTable* get_or_insert_table(char* uri) {
     GHashTable* r = g_hash_table_lookup(props, uri);
     if(r == NULL) {
@@ -138,14 +147,17 @@ GArray* get_or_insert_list(char* uri, GHashTable* p) {
 
 GHashTable* mkindex(char* uri) {
     GHashTable* r = get_or_insert_table(uri);
-    if(access(uri, F_OK) == -1) { 
+    char* html;
+    asprintf(&html, "%s.html", uri);
+    if(access(html, F_OK) == -1) { 
         FILE* f = fopen("index.html", "a"); 
-        fprintf(f, "<p><a href=\"%s\">%s</a></p>\n", uri, uri); 
+        fprintf(f, "<p><a href=\"%s.html\">%s</a></p>\n", uri, uri); 
         fclose(f);
-        f = fopen(uri, "a");
-        fprintf(f, "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>Titulo da página</title></head><body>\n");
+        f = open_html(uri, "a");
+        fprintf(f, "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>%s</title></head><body>\n", uri);
         fprintf(f, "<p><a href=\"index.html\">Index</a></p>\n"); 
         fclose(f);
+        free(html);
         g_hash_table_insert(props, strdup(uri), r);
     }
     return r;
@@ -172,20 +184,20 @@ char* findrev(char* uri) {
 
 void run_table_2(char* key, GArray* value, void* v) {
     struct cmp* t;
-    FILE* f = fopen(v, "a");
+    FILE* f = open_html(v, "a");
     fprintf(f, "<p>%s: ", key);
     for(int i = 0; i < value->len; i++) {
         t = g_array_index(value, struct cmp*, i);
         if(!t->type)
             fprintf(f, "%s ", t->str);
         else
-            fprintf(f, "<a href=\"%s\">%s</a> ", t->str, t->str);
+            fprintf(f, "<a href=\"%s.html\">%s</a> ", t->str, t->str);
     }
     fprintf(f, "</p>\n");
 }
 
 void run_table(char* key, void* value, void* v) {
-    FILE* f = fopen(key, "a");
+    FILE* f = open_html(key, "a");
     struct cmp* t;
     void* k;
     GArray* val;
@@ -203,9 +215,9 @@ void run_table(char* key, void* value, void* v) {
         fprintf(f, "<p>", key);
         for(int i = 0; i < val->len; i++) {
             t = g_array_index(val, struct cmp*, i);
-            fprintf(f, "<a href=\"%s\">%s</a> ", t->str, t->str);
-            FILE* fr = fopen(t->str, "a");
-            fprintf(fr, "<p><a href=\"%s\">%s</a></p>\n", key, key);
+            fprintf(f, "<a href=\"%s.html\">%s</a> ", t->str, t->str);
+            FILE* fr = open_html(t->str, "a");
+            fprintf(fr, "<p><a href=\"%s.html\">%s</a></p>\n", key, key);
             fclose(fr);
         }
         fprintf(f, "</p>\n");
@@ -225,10 +237,13 @@ int yyerror(char *s)
 int main(int argc, char* argv[])
 {
     FILE* f = fopen("index.html", "a");
-    fprintf(f, "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>Titulo da página</title></head><body>\n");
+    fprintf(f, "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>Turtle Parser</title></head><body>\n");
     fclose(f);
     props = g_hash_table_new(g_str_hash, g_str_equal);
-    f = fopen("reverse", "r");
+    char* fname;
+    asprintf(&fname, "%s/.turtle", getenv("HOME"));
+    f = fopen(fname, "r");
+    free(fname);
     if(f != NULL) {
         yyin = f;
         yyparse();
